@@ -35,11 +35,11 @@ public class Employee {
 
     private Double salary;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate joiningDate;
     
     private String status;
-    private LocalDate createdBy;
+    private LocalDate createdDate;
     
     
 }

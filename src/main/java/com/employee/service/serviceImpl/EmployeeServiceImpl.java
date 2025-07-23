@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setJoiningDate(dto.getJoiningDate());
 
         employee.setStatus("Active");
-        employee.setCreatedBy(LocalDate.now());
+        employee.setCreatedDate(LocalDate.now());
         
         return employeeRepository.save(employee);
     }

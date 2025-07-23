@@ -18,6 +18,6 @@ public class EmployeeRequestDTO {
 	 private String department;
 	 private Double salary;
 
-     @JsonFormat(pattern = "yyyy-MM-dd")
+     @JsonFormat(pattern = "dd-MM-yyyy")
 	 private LocalDate joiningDate;
 }
