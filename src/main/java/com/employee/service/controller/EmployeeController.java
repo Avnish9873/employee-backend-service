@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.service.model.Employee;
 import com.employee.service.requestdto.EmployeeRequestDTO;
+import com.employee.service.responsedto.ApiResponseEntity;
 import com.employee.service.service.EmployeeService;
 
 
@@ -40,22 +41,15 @@ public class EmployeeController {
 	        logger.info("Received request to create employee");
 
 	        Employee saved = employeeService.createEmployee(dto);
-
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Employee created successfully");
-	        response.put("employee", saved);
-
-	        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	        return ResponseEntity.ok().body(ApiResponseEntity.getStringObject("Employee Added Successfully", saved));
 
 	    } catch (IllegalArgumentException ex) {
 	        logger.warn("Validation failed: {}", ex.getMessage());
-	        return ResponseEntity.badRequest()
-	                .body(Map.of("error", ex.getMessage()));
+	        return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
 
 	    } catch (Exception ex) {
 	        logger.error("Unexpected error: {}", ex.getMessage(), ex);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Map.of("error", "Internal server error"));
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal server error"));
 	    }
 	}
 
@@ -70,7 +64,7 @@ public class EmployeeController {
                 return ResponseEntity.status(204).body(Map.of("message", "No data available"));
             }
             logger.info("Employees found: {}", employees.size());
-            return ResponseEntity.ok(employees);
+            return ResponseEntity.ok().body(ApiResponseEntity.getListStringObject(employees));
         } catch (Exception e) {
             logger.error("Error fetching employees: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().body(Map.of("error", "Unable to fetch employee data"));
@@ -82,8 +76,8 @@ public class EmployeeController {
 	    try {
 	        logger.info("Received request to fetch employee with ID: {}", id);
 	        Optional<Employee> employee = employeeService.getEmployeeById(id);
-	        return ResponseEntity.ok(employee);
-
+	        return ResponseEntity.ok().body(ApiResponseEntity.getListStringObject(employee));
+	        
 	    } catch (NoSuchElementException ex) {
 	        logger.warn("Employee not found: {}", ex.getMessage());
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
@@ -100,13 +94,8 @@ public class EmployeeController {
 	    try {
 	        logger.info("Received request to update employee with ID: {}", id);
 	        Employee updatedEmployee = employeeService.updateEmployee(id, dto);
-
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Employee updated successfully");
-	        response.put("employee", updatedEmployee);
-
-	        return ResponseEntity.ok(response);
-
+	        
+	        return ResponseEntity.ok().body(ApiResponseEntity.getStringObject("Employee Updated Successfully", updatedEmployee));
 	    } catch (NoSuchElementException ex) {
 	        logger.warn("Update failed: {}", ex.getMessage());
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
